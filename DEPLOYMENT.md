@@ -1,174 +1,85 @@
-# Deployment Guide for Hamburg DriverGuide
+# Hamburg DriverGuide - GitHub Pages Deployment
 
-This guide covers three easy ways to deploy your application online.
-
----
-
-## Option 1: GitHub Pages (Free) ⭐ Recommended
-
-GitHub Pages is completely free and automatically rebuilds when you push changes.
-
-### Step 1: Update the Base URL
-
-1. Open `vite.config.ts`
-2. Replace `your-repo-name` with your actual GitHub repository name:
-   ```typescript
-   base: process.env.NODE_ENV === 'production' ? '/hamburg-driver-guide/' : '/',
-   ```
-   
-   Example: If your repository is `https://github.com/yourusername/hamburg-driver-guide`, use `/hamburg-driver-guide/`
-
-### Step 2: Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/yourusername/your-repo-name.git
-git push -u origin main
-```
-
-### Step 3: Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click **Settings** → **Pages** (in the left sidebar)
-3. Under **Source**, select **GitHub Actions**
-4. The workflow will automatically run and deploy your site
-
-### Step 4: Access Your Site
-
-Your site will be available at: `https://yourusername.github.io/your-repo-name/`
-
-The deployment takes about 1-2 minutes. Check the **Actions** tab to see the build progress.
+Your app is pre-configured for deployment to:
+**https://semprog25.github.io/Angelasimplifybookingwebsite/**
 
 ---
 
-## Option 2: Vercel (Free)
+## Fix the Workflow Conflict (One-Time)
 
-Vercel offers unlimited deployments and automatic previews for every push.
+You have conflicting workflow files that both create a `github-pages` artifact. Fix this first:
 
-### Step 1: Install Vercel CLI (Optional)
+1. Go to: https://github.com/semprog25/Angelasimplifybookingwebsite/tree/main/.github/workflows
+2. **Delete `static.yml`** (click the file, click the trash icon, commit the deletion)
+3. **Delete any other `.yml` files** except `deploy.yml`
+4. If `deploy.yml` doesn't exist yet, create it (see below)
 
-```bash
-npm install -g vercel
-```
+## Deploy Steps
 
-### Step 2: Deploy
+### 1. Copy the workflow file into your repo
 
-**Method A: Using Vercel CLI**
-```bash
-vercel
-```
-Follow the prompts and your site will be deployed in seconds!
+Copy `workflows/deploy.yml` from this project to `.github/workflows/deploy.yml` in your GitHub repository.
 
-**Method B: Using Vercel Dashboard**
-1. Go to [vercel.com](https://vercel.com)
-2. Sign up/Sign in with GitHub
-3. Click **Add New** → **Project**
-4. Import your GitHub repository
-5. Vercel auto-detects Vite settings
-6. Click **Deploy**
+You can do this via the GitHub web UI:
+- Navigate to your repo
+- Click **Add file** > **Create new file**
+- Name it `.github/workflows/deploy.yml`
+- Paste the contents of `workflows/deploy.yml`
+- Commit
 
-Your site will be live at `https://your-project.vercel.app`
+### 2. Enable GitHub Pages with Actions
 
-### Important for Vercel:
-Update `vite.config.ts` to use root path:
-```typescript
-base: '/',  // Change this for Vercel
-```
+1. Go to **Settings** > **Pages** (left sidebar)
+2. Under **Source**, select **GitHub Actions** (not "Deploy from a branch")
+3. Save
 
----
+### 3. Push your code
 
-## Option 3: Netlify (Free)
-
-Netlify is great for static sites with drag-and-drop deployment.
-
-### Step 1: Build Your Project Locally
-
-```bash
-npm install
-npm run build
-```
-
-This creates a `dist` folder with your production files.
-
-### Step 2: Deploy
-
-**Method A: Drag & Drop**
-1. Go to [netlify.com](https://netlify.com)
-2. Sign up/Sign in
-3. Drag the `dist` folder onto the Netlify dashboard
-4. Your site is live!
-
-**Method B: Connect to GitHub**
-1. Go to [netlify.com](https://netlify.com)
-2. Click **Add new site** → **Import an existing project**
-3. Connect your GitHub repository
-4. Build settings:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-5. Click **Deploy**
-
-Your site will be at `https://random-name.netlify.app` (you can customize this)
-
-### Important for Netlify:
-Update `vite.config.ts` to use root path:
-```typescript
-base: '/',  // Change this for Netlify
-```
-
----
-
-## Quick Comparison
-
-| Feature | GitHub Pages | Vercel | Netlify |
-|---------|-------------|--------|---------|
-| **Cost** | Free | Free | Free |
-| **Custom Domain** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Auto Deploy** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Build Time** | ~2 min | ~1 min | ~1 min |
-| **SSL/HTTPS** | ✅ Auto | ✅ Auto | ✅ Auto |
-| **Best For** | Simple static sites | All projects | All projects |
-
----
-
-## Updating Your Site
-
-Once deployed, updating is easy:
-
-### For GitHub Pages:
 ```bash
 git add .
-git commit -m "Update content"
-git push
+git commit -m "Deploy: Reports tab + GitHub Pages config"
+git push origin main
 ```
-The site auto-updates in 1-2 minutes.
 
-### For Vercel/Netlify:
-Just push to GitHub, and they'll automatically rebuild and deploy!
+The workflow will automatically build and deploy. Check progress in the **Actions** tab.
+
+### 4. Verify
+
+Your site will be live at: https://semprog25.github.io/Angelasimplifybookingwebsite/
+
+---
+
+## How It Works
+
+| What | How |
+|------|-----|
+| **Base path** | Vite automatically prefixes all assets with `/Angelasimplifybookingwebsite/` in production |
+| **SPA routing** | A `404.html` (copy of `index.html`) is auto-generated so GitHub Pages serves the app for any path |
+| **Jekyll bypass** | A `.nojekyll` file is auto-generated so `_`-prefixed Vite assets aren't ignored |
+| **Caching** | pnpm dependency caching speeds up subsequent builds |
 
 ---
 
 ## Troubleshooting
 
-### Images not loading after deployment?
-- Make sure all image URLs are absolute (https://) or use the correct base path
-- Check that image URLs in your code are accessible
-
-### Page shows 404 on refresh?
-- For Vercel/Netlify: This shouldn't happen with Vite
-- For GitHub Pages: Make sure your base URL in `vite.config.ts` is correct
-
-### Build fails?
-- Check the build logs in the **Actions** tab (GitHub) or deployment logs (Vercel/Netlify)
-- Make sure all dependencies are in `package.json`
-- Try building locally first: `npm run build`
+| Problem | Fix |
+|---------|-----|
+| Blank page | Make sure **Settings > Pages > Source** is set to **GitHub Actions** |
+| 404 error | Check that `deploy.yml` is the ONLY workflow in `.github/workflows/` |
+| Assets not loading | Verify `base` in `vite.config.ts` matches your repo name |
+| Build fails | Check the **Actions** tab for error logs; try `pnpm install && pnpm run build` locally |
+| "Artifact already exists" | You still have a second workflow file. Delete ALL files in `.github/workflows/` except `deploy.yml` |
 
 ---
 
-## Need Help?
+## Updating the Live Site
 
-- GitHub Pages: [docs.github.com/pages](https://docs.github.com/pages)
-- Vercel: [vercel.com/docs](https://vercel.com/docs)
-- Netlify: [docs.netlify.com](https://docs.netlify.com)
+Simply push to `main`:
+
+```bash
+git add .
+git commit -m "Your update message"
+git push
+```
+
+The workflow auto-triggers and your site updates in ~2 minutes.

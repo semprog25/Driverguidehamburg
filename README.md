@@ -1,83 +1,83 @@
 # Hamburg DriverGuide - Angela
 
-This is a responsive web application for Angela's DriverGuide service in Hamburg.
-Built with React, Tailwind CSS, and Vite.
+A responsive web application for Angela's private tour guide and chauffeur service in Hamburg.
+Built with React 18, TypeScript, Tailwind CSS v4, and Vite.
 
-## 🚀 Quick Start
+**Live site:** https://semprog25.github.io/Angelasimplifybookingwebsite/
 
-1.  **Install Dependencies:**
-    ```bash
-    npm install
-    # or
-    pnpm install
-    # or
-    yarn install
-    ```
+## Quick Start
 
-2.  **Run Development Server:**
-    ```bash
-    npm run dev
-    ```
+```bash
+# Install dependencies
+pnpm install
 
-3.  **Build for Production:**
-    ```bash
-    npm run build
-    ```
+# Run development server
+pnpm dev
 
-## 📦 Deployment
+# Build for production
+pnpm build
 
-See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for detailed instructions on deploying to:
-- **GitHub Pages** (recommended, free)
-- **Vercel** (free, fastest)
-- **Netlify** (free, easy)
+# Preview production build locally
+pnpm preview
+```
 
-### Quick Deploy to GitHub Pages:
+## Deployment (GitHub Pages)
 
-1. Update `vite.config.ts` with your repository name
-2. Push to GitHub
-3. Enable GitHub Pages in repository settings (select "GitHub Actions")
-4. Your site will be live at `https://yourusername.github.io/repo-name/`
+The site auto-deploys on every push to `main` via the GitHub Actions workflow at `.github/workflows/deploy.yml`.
 
-## 🛠️ Technology Stack
+**First-time setup:**
 
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Tailwind CSS v4** - Styling
-- **Vite** - Build tool
-- **Motion** (Framer Motion) - Animations
-- **Lucide React** - Icons
-- **Material UI** - Additional components
+1. Go to your repo **Settings > Pages**
+2. Set **Source** to **GitHub Actions**
+3. Delete any old workflow files in `.github/workflows/` (e.g. `static.yml`) that conflict
+4. Push to `main` — the workflow runs automatically
 
-## 📁 Project Structure
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for full troubleshooting details.
+
+## Project Structure
 
 ```
-hamburg-driver-guide/
+/
+├── .github/workflows/deploy.yml   # GitHub Pages CI/CD
 ├── src/
 │   ├── app/
-│   │   ├── components/     # React components
-│   │   ├── context/        # Context providers (Language)
-│   │   ├── lib/           # Utility functions
-│   │   ├── translations.ts # i18n translations
-│   │   └── App.tsx        # Main app component
-│   ├── styles/
-│   │   ├── fonts.css      # Font imports
-│   │   ├── theme.css      # Theme variables
-│   │   └── tailwind.css   # Tailwind directives
-│   └── main.tsx           # App entry point
-├── index.html             # HTML entry
-├── vite.config.ts         # Vite configuration
-└── package.json           # Dependencies
+│   │   ├── components/            # React components
+│   │   │   ├── ui/                # shadcn/ui base components
+│   │   │   ├── mobile/            # Mobile-specific components
+│   │   │   ├── Home.tsx           # Homepage with Angela mascot
+│   │   │   ├── Services.tsx       # Tour listings
+│   │   │   ├── Memories.tsx       # Guest memories gallery
+│   │   │   ├── MoreSection.tsx    # Legal pages + Admin access
+│   │   │   ├── AdminPanel.tsx     # Protected admin dashboard (6 tabs)
+│   │   │   └── ...
+│   │   ├── context/               # Language context (DE/EN/ES)
+│   │   ├── lib/translations.ts    # i18n translation strings
+│   │   └── App.tsx                # Main app component
+│   ├── styles/                    # CSS (fonts, theme, Tailwind)
+│   └── main.tsx                   # Entry point
+├── index.html                     # HTML shell
+├── vite.config.ts                 # Vite + GitHub Pages config
+├── tsconfig.json                  # TypeScript configuration
+└── package.json
 ```
 
-## 🌐 Features
+## Features
 
-- **Multi-language support** (English/German)
-- **Responsive design** (mobile-first)
-- **Protected admin panel**
-- **Interactive animations**
-- **Image optimization with fallbacks**
-- **Accessibility compliant**
+- Multi-language support (German, English, Spanish)
+- Responsive mobile-first design with bottom navigation
+- Protected admin panel with 6 tabs (Bookings, Calendar, Blog, Gallery, Settings, Reports)
+- Reports tab with yearly highlights and CSV export
+- Animated page transitions (Motion)
+- Guest memories with photo galleries
+- Tour booking form
 
-## 📝 License
+## Tech Stack
 
-Private project for Angela's DriverGuide service.
+- **React 18** + **TypeScript**
+- **Tailwind CSS v4** with custom theme
+- **Vite** build tool
+- **Motion** (animations)
+- **Recharts** (admin reports charts)
+- **Radix UI** + **shadcn/ui** (component primitives)
+- **Lucide React** (icons)
+- **Material UI** (select components)

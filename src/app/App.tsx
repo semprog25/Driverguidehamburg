@@ -7,13 +7,13 @@ import { LanguageProvider } from '@/app/context/LanguageContext';
 import { Button } from '@/app/components/ui/button';
 import { Home as HomeIcon } from 'lucide-react';
 
-// Images
-import imgHamburg from "figma:asset/5ee1d05ee194db85b25623d0d254b6611f4c8283.png";
-import imgLuebeck from "figma:asset/c9812e7e9d0c4996674cdd9f5b57c5991cb0fa5e.png";
-import imgLueneburg from "figma:asset/0d5fd9b56abba71d61dc17442d3f7c5d910e6eee.png";
-import imgAltesLand from "figma:asset/dc89bca148dfb404ba35d32ccc5fc979c5a99971.png";
-import imgRuegen from "figma:asset/93b4c87f52fa0de8c3ab554d481d36b5b1a6f98c.png";
-import imgPloen from "figma:asset/12160c15844553d5a80e95287e3e95e3c2c693b3.png";
+// Images — using Unsplash URLs (replaced Figma asset imports for git compatibility)
+const imgHamburg = "https://images.unsplash.com/photo-1542739872-bcb440dfbefc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const imgLuebeck = "https://images.unsplash.com/photo-1632223082347-53ccbc3dcf83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const imgLueneburg = "https://images.unsplash.com/photo-1511635697257-11edf94574d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const imgAltesLand = "https://images.unsplash.com/photo-1714254093747-866ddd63428c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const imgRuegen = "https://images.unsplash.com/photo-1686086612359-ee27b690ef00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const imgPloen = "https://images.unsplash.com/photo-1768382651074-81b4bb392c29?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
 
 // Components
 import { Header } from '@/app/components/Header';

@@ -2,10 +2,12 @@ import { Language } from "../App";
 import { translations } from "../translations";
 import { Card, CardContent } from "./ui/card";
 import { Award, Shield, Lightbulb, Clock } from "lucide-react";
-import angelaImage from "figma:asset/c6a05b5b2c6f6525140f7b84255b18935114b4b4.png";
-import harborImage from "figma:asset/9b5114d9d6feb03eae467855cf02565f57d5196a.png";
-import castleImage from "figma:asset/29c0bdc2cfde11ad29ad06910462a58813755513.png";
-import luebeckImage from "figma:asset/998012ba93f9c1e4bcce24ecf3df4b6996dd0c0b.png";
+
+// Images — using Unsplash URLs (replaced Figma asset imports for git compatibility)
+const angelaImage = "https://images.unsplash.com/photo-1738776755796-8f02061f76c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const harborImage = "https://images.unsplash.com/photo-1764725237655-2553f9cceccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const castleImage = "https://images.unsplash.com/photo-1766231593852-fce6cdcb8cda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const luebeckImage = "https://images.unsplash.com/photo-1581183948201-ddbae95a56a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
 
 interface AboutDriverProps {
   language: Language;
