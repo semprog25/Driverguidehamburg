@@ -3,7 +3,7 @@
 A responsive web application for Angela's private tour guide and chauffeur service in Hamburg.
 Built with React 18, TypeScript, Tailwind CSS v4, and Vite.
 
-**Live site:** https://semprog25.github.io/Angelasimplifybookingwebsite/
+**Live site:** https://semprog25.github.io/Driverguidehamburg/
 
 ## Quick Start
 

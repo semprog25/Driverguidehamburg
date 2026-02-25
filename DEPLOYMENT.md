@@ -1,7 +1,7 @@
 # Hamburg DriverGuide - GitHub Pages Deployment
 
 Your app is pre-configured for deployment to:
-**https://semprog25.github.io/Angelasimplifybookingwebsite/**
+**https://semprog25.github.io/Driverguidehamburg/**
 
 ---
 
@@ -9,7 +9,7 @@ Your app is pre-configured for deployment to:
 
 You have conflicting workflow files that both create a `github-pages` artifact. Fix this first:
 
-1. Go to: https://github.com/semprog25/Angelasimplifybookingwebsite/tree/main/.github/workflows
+1. Go to: https://github.com/semprog25/Driverguidehamburg/tree/main/.github/workflows
 2. **Delete `static.yml`** (click the file, click the trash icon, commit the deletion)
 3. **Delete any other `.yml` files** except `deploy.yml`
 4. If `deploy.yml` doesn't exist yet, create it (see below)
@@ -45,7 +45,7 @@ The workflow will automatically build and deploy. Check progress in the **Action
 
 ### 4. Verify
 
-Your site will be live at: https://semprog25.github.io/Angelasimplifybookingwebsite/
+Your site will be live at: https://semprog25.github.io/Driverguidehamburg/
 
 ---
 
@@ -53,7 +53,7 @@ Your site will be live at: https://semprog25.github.io/Angelasimplifybookingwebs
 
 | What | How |
 |------|-----|
-| **Base path** | Vite automatically prefixes all assets with `/Angelasimplifybookingwebsite/` in production |
+| **Base path** | Vite automatically prefixes all assets with `/Driverguidehamburg/` in production |
 | **SPA routing** | A `404.html` (copy of `index.html`) is auto-generated so GitHub Pages serves the app for any path |
 | **Jekyll bypass** | A `.nojekyll` file is auto-generated so `_`-prefixed Vite assets aren't ignored |
 | **Caching** | pnpm dependency caching speeds up subsequent builds |

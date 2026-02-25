@@ -31,7 +31,7 @@ function githubPagesPlugin() {
 }
 
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/Angelasimplifybookingwebsite/' : '/',
+  base: mode === 'production' ? '/Driverguidehamburg/' : '/',
   plugins: [
     react(),
     tailwindcss(),
