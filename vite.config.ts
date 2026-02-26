@@ -26,12 +26,19 @@ function githubPagesPlugin() {
       const nojekyllPath = path.resolve(distDir, '.nojekyll')
       fs.writeFileSync(nojekyllPath, '')
       console.log('Created .nojekyll file')
+
+      // Ensure CNAME persists for custom domain after deployment
+      const cnamePath = path.resolve(distDir, 'CNAME')
+      if (!fs.existsSync(cnamePath)) {
+        fs.writeFileSync(cnamePath, 'driverguidehamburg.semprog.de')
+        console.log('Created CNAME file for custom domain')
+      }
     }
   }
 }
 
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/Driverguidehamburg/' : '/',
+  base: '/',
   plugins: [
     react(),
     tailwindcss(),
