@@ -840,13 +840,15 @@ function PostModal({ isOpen, onClose, post, onSave }: { isOpen: boolean, onClose
 
 function GalleryModal({ isOpen, onClose, item, onSave }: { isOpen: boolean, onClose: () => void, item: GalleryItem | null, onSave: (i: GalleryItem) => void }) {
     const [formData, setFormData] = useState<Partial<GalleryItem>>({});
+    const [imgError, setImgError] = useState(false);
 
     useEffect(() => {
         if (item) {
             setFormData(item);
         } else {
-            setFormData({ title: '', description: '', imageUrl: 'https://images.unsplash.com/photo-1543832923-4466d5806e10?auto=format&fit=crop&q=80', date: new Date().toISOString() });
+            setFormData({ title: '', description: '', imageUrl: '', date: new Date().toISOString() });
         }
+        setImgError(false);
     }, [item, isOpen]);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -860,19 +862,54 @@ function GalleryModal({ isOpen, onClose, item, onSave }: { isOpen: boolean, onCl
     return (
         <AnimatePresence>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                     <div className="flex justify-between items-center mb-6 border-b pb-4">
                         <h2 className="text-xl font-bold">{item ? 'Edit Photo' : 'New Photo'}</h2>
                         <button onClick={onClose}><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div><label className="block text-sm font-medium mb-1">Title</label><input required className="w-full p-2 border rounded-lg" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
-                        <div><label className="block text-sm font-medium mb-1">Photo URL</label><input required className="w-full p-2 border rounded-lg" value={formData.imageUrl || ''} onChange={e => setFormData({...formData, imageUrl: e.target.value})} /></div>
+                        
+                        {/* Photo URL with live preview */}
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Photo URL</label>
+                            <input
+                                required
+                                className="w-full p-2 border rounded-lg"
+                                placeholder="https://images.unsplash.com/..."
+                                value={formData.imageUrl || ''}
+                                onChange={e => { setFormData({...formData, imageUrl: e.target.value}); setImgError(false); }}
+                            />
+                            <p className="text-xs text-slate-400 mt-1">
+                                Paste any public image URL (Unsplash, Google Photos "share link", Dropbox, etc.). Must start with <strong>https://</strong>.
+                            </p>
+                            {/* Live preview */}
+                            {formData.imageUrl && (
+                                <div className="mt-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 aspect-[4/3] flex items-center justify-center">
+                                    {imgError ? (
+                                        <div className="text-center p-4">
+                                            <ImageIcon size={32} className="mx-auto text-red-400 mb-2" />
+                                            <p className="text-sm text-red-500 font-medium">Image could not load</p>
+                                            <p className="text-xs text-slate-400 mt-1">Check the URL is a direct link to an image file</p>
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={formData.imageUrl}
+                                            alt="Preview"
+                                            className="w-full h-full object-cover"
+                                            onError={() => setImgError(true)}
+                                            onLoad={() => setImgError(false)}
+                                        />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
                         <div><label className="block text-sm font-medium mb-1">Description (Story)</label><textarea required className="w-full p-2 border rounded-lg" rows={5} value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Tell the story behind this photo..." /></div>
                         <div><label className="block text-sm font-medium mb-1">Date</label><input type="date" className="w-full p-2 border rounded-lg" value={formData.date ? formData.date.slice(0, 10) : ''} onChange={e => setFormData({...formData, date: new Date(e.target.value).toISOString()})} /></div>
                         <div className="pt-4 flex justify-end gap-2">
                             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                            <Button type="submit">Save to Gallery</Button>
+                            <Button type="submit" disabled={imgError}>Save to Gallery</Button>
                         </div>
                     </form>
                 </motion.div>

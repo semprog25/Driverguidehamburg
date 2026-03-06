@@ -42,7 +42,26 @@ function MainLayout() {
   // Data States
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+
+  // Gallery — initialised from localStorage so admin edits persist across refreshes
+  const GALLERY_KEY = 'driverguide_gallery_v1';
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
+    try {
+      const stored = localStorage.getItem(GALLERY_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return []; // empty → useEffect will seed mock data below
+  });
+
+  // Persist gallery to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(GALLERY_KEY, JSON.stringify(galleryItems));
+    } catch {}
+  }, [galleryItems]);
 
   // Mock initial data
   useEffect(() => {
@@ -182,7 +201,11 @@ function MainLayout() {
            date: new Date(Date.now() - 432000000).toISOString()
         }
     ];
-    setGalleryItems(mockGallery);
+    setGalleryItems(prev => {
+      // Only seed mock data if localStorage was empty (no existing items)
+      if (prev.length > 0) return prev;
+      return mockGallery;
+    });
   }, []);
 
   // Booking Handlers
