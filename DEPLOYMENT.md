@@ -1,88 +1,121 @@
-# Hamburg DriverGuide - GitHub Pages Deployment
+# Hamburg DriverGuide — Deployment Guide
 
-Your app is now configured for deployment to the custom domain:
-**https://driverguidehamburg.semprog.de/**
-
----
-
-## Custom Domain Setup (Already Done)
-
-Your GitHub Pages is configured with a custom domain. The following changes make it work correctly:
-
-| File | Change |
-|------|--------|
-| `vite.config.ts` | `base` set to `'/'` (custom domains serve from root, not a sub-path) |
-| `public/CNAME` | Contains `driverguidehamburg.semprog.de` — keeps custom domain after every deployment |
-| `vite.config.ts` plugin | Also writes `CNAME` to `dist/` during build as a safety net |
+Live URL: **https://driverguidehamburg.semprog.de/**
 
 ---
 
-## Deploy Steps
+## Why GitHub Actions may not deploy
 
-### 1. Ensure the workflow file exists in your repo
+The most common causes, in order:
 
-The file `.github/workflows/deploy.yml` must exist in your GitHub repository.
-A reference copy is at `workflows/deploy.yml` in this project.
+| # | Cause | Fix |
+|---|-------|-----|
+| 1 | `.github/workflows/deploy.yml` doesn't exist in the repo | Create it (see Step 1 below) |
+| 2 | GitHub Pages source is not set to **GitHub Actions** | Change it (see Step 2 below) |
+| 3 | A second workflow file conflicts (e.g. `static.yml`) | Delete all `.yml` files except `deploy.yml` |
+| 4 | pnpm lockfile mismatch causes build to fail | Workflow uses `--no-frozen-lockfile` — this is already fixed |
+| 5 | Custom domain resets after deploy (CNAME missing) | `public/CNAME` file exists in this project — already fixed |
 
-You can create/update it via the GitHub web UI:
-- Navigate to your repo
-- Click **Add file** > **Create new file**
-- Name it `.github/workflows/deploy.yml`
-- Paste the contents of `workflows/deploy.yml`
-- Commit
+---
 
-### 2. Confirm GitHub Pages settings
+## Step 1 — Create `.github/workflows/deploy.yml` on GitHub
 
-1. Go to **Settings** > **Pages** (left sidebar)
-2. Under **Source**, select **GitHub Actions**
-3. Under **Custom domain**, enter `driverguidehamburg.semprog.de`
-4. Ensure **Enforce HTTPS** is checked
-5. DNS check should show ✓ green
+Figma Make cannot write hidden directories, so you must do this on GitHub directly.
 
-### 3. Push your code
+### Option A — GitHub web UI (easiest)
+
+1. Go to: **https://github.com/semprog25/Driverguidehamburg**
+2. Click **Add file** → **Create new file**
+3. In the filename box, type exactly: `.github/workflows/deploy.yml`
+   - GitHub will automatically create the nested folders
+4. Paste the **entire contents** of `workflows/deploy.yml` from this project
+5. Click **Commit changes** → commit directly to `main`
+
+### Option B — Git command line
 
 ```bash
-git add .
-git commit -m "Fix: base path and CNAME for custom domain driverguidehamburg.semprog.de"
+mkdir -p .github/workflows
+cp workflows/deploy.yml .github/workflows/deploy.yml
+git add .github/workflows/deploy.yml
+git commit -m "Add GitHub Actions deploy workflow"
 git push origin main
 ```
 
-The workflow will automatically build and deploy. Check progress in the **Actions** tab.
-
-### 4. Verify
-
-Your site will be live at: **https://driverguidehamburg.semprog.de/**
+> If `.github/workflows/deploy.yml` already exists, compare it with `workflows/deploy.yml` in this project and make sure they match exactly.
 
 ---
 
-## How It Works
+## Step 2 — Configure GitHub Pages to use GitHub Actions
+
+1. Go to your repo → **Settings** → **Pages** (left sidebar)
+2. Under **Build and deployment → Source**, select **GitHub Actions**
+   - ⚠️ Do NOT select "Deploy from a branch" — that uses a different system
+3. Under **Custom domain**, type: `driverguidehamburg.semprog.de`
+4. Click **Save** — wait for the DNS check to go green
+5. Check **Enforce HTTPS**
+
+---
+
+## Step 3 — Check your DNS is correct
+
+Your DNS provider needs this record:
+
+| Type | Name | Value |
+|------|------|-------|
+| `CNAME` | `driverguidehamburg` | `semprog25.github.io` |
+
+DNS changes can take up to 24h. You can verify with:
+```
+nslookup driverguidehamburg.semprog.de
+```
+It should resolve to GitHub's servers.
+
+---
+
+## Step 4 — Push your code and trigger a deploy
+
+```bash
+git add .
+git commit -m "Deploy: fix workflow and custom domain"
+git push origin main
+```
+
+The workflow triggers automatically on push to `main`. You can also trigger it manually:
+- Go to repo → **Actions** tab → **Deploy to GitHub Pages** → **Run workflow** → **Run workflow**
+
+---
+
+## Step 5 — Watch the Actions log
+
+1. Go to repo → **Actions** tab
+2. Click the latest **Deploy to GitHub Pages** run
+3. If it shows ✅ green — your site is live
+4. If it shows ❌ red — click on the failed step to see the error log
+
+### Common build errors and fixes
+
+| Error message | Fix |
+|---------------|-----|
+| `ERR_PNPM_LOCKFILE_MISSING` | Already handled by `--no-frozen-lockfile` in the workflow |
+| `Module not found` | A package is missing; run `pnpm install` locally and push |
+| `configure-pages: Error` | GitHub Pages source is not set to GitHub Actions (Step 2) |
+| `Artifact already exists` | Two workflow files are running — delete all except `deploy.yml` |
+| `deploy-pages: Error` | `pages: write` permission missing — check the workflow has the correct `permissions` block |
+
+---
+
+## How it works
 
 | What | How |
 |------|-----|
-| **Base path** | `'/'` — with a custom domain, all assets are served from the domain root |
-| **Custom domain** | `public/CNAME` is copied to `dist/CNAME` by Vite, telling GitHub Pages to keep using the custom domain |
-| **SPA routing** | A `404.html` (copy of `index.html`) is auto-generated so the app handles any URL path |
-| **Jekyll bypass** | A `.nojekyll` file is auto-generated so `_`-prefixed Vite assets aren't ignored |
-| **Caching** | pnpm dependency caching speeds up subsequent builds |
+| **base path** | `'/'` — custom domains serve from root, not a sub-path |
+| **CNAME** | `public/CNAME` is copied to `dist/CNAME` by Vite, telling GitHub Pages to keep the custom domain after every deploy |
+| **SPA routing** | `404.html` (copy of `index.html`) is auto-generated so direct URL access works |
+| **Jekyll bypass** | `.nojekyll` is auto-generated so `_`-prefixed Vite assets aren't hidden |
 
 ---
 
-## Troubleshooting
-
-| Problem | Fix |
-|---------|-----|
-| Blank page / assets 404 | Confirm `base: '/'` is set in `vite.config.ts` (NOT `/Driverguidehamburg/`) |
-| Custom domain resets after deploy | Confirm `public/CNAME` exists with exactly `driverguidehamburg.semprog.de` (no trailing newline issues) |
-| DNS not resolving | Your DNS provider needs a CNAME record: `driverguidehamburg` → `semprog25.github.io` |
-| 404 on page refresh | Check that `404.html` was generated in `dist/` (the Vite plugin does this automatically) |
-| Build fails | Check the **Actions** tab for error logs; try `pnpm install && pnpm run build` locally |
-| "Artifact already exists" | Delete ALL files in `.github/workflows/` except `deploy.yml` |
-
----
-
-## Updating the Live Site
-
-Simply push to `main`:
+## Updating the live site
 
 ```bash
 git add .
@@ -90,4 +123,4 @@ git commit -m "Your update message"
 git push
 ```
 
-The workflow auto-triggers and your site updates in ~2 minutes.
+Deploys automatically in ~2 minutes.

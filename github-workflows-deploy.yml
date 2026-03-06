@@ -1,8 +1,14 @@
 # =========================================================
 # COPY THIS FILE TO:  .github/workflows/deploy.yml
 # =========================================================
-# You CANNOT do this from Figma Make (hidden dirs not supported).
-# Instead, create it directly on GitHub — see instructions below.
+# Figma Make cannot write hidden directories (.github/).
+# Create/update it directly on GitHub via the web UI:
+#
+# 1. Go to: https://github.com/semprog25/Driverguidehamburg
+# 2. Click "Add file" > "Create new file"
+# 3. Type the path:  .github/workflows/deploy.yml
+# 4. Paste the content below (from "name:" onwards)
+# 5. Click "Commit changes" → commit to main
 # =========================================================
 
 name: Deploy to GitHub Pages
