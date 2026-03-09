@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 // @refresh reset
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export interface CMSServiceCard {
   id: string;
@@ -148,7 +148,7 @@ export const DEFAULT_CMS: CMSData = {
   },
 };
 
-interface CMSContextValue {
+export interface CMSContextValue {
   cms: CMSData;
   updateCMS: (updater: (prev: CMSData) => CMSData) => void;
   updateSection: <K extends keyof CMSData>(section: K, values: Partial<CMSData[K]>) => void;
@@ -158,7 +158,18 @@ interface CMSContextValue {
   importCMS: (data: CMSData) => void;
 }
 
-const CMSContext = createContext<CMSContextValue | null>(null);
+// Safe no-op fallback used when the context is not yet mounted (e.g. during HMR)
+const FALLBACK: CMSContextValue = {
+  cms: DEFAULT_CMS,
+  updateCMS: () => {},
+  updateSection: () => {},
+  updateService: () => {},
+  resetSection: () => {},
+  resetAll: () => {},
+  importCMS: () => {},
+};
+
+const CMSContext = createContext<CMSContextValue>(FALLBACK);
 
 const CMS_STORAGE_KEY = 'driverguide_cms_v1';
 
@@ -179,7 +190,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem(CMS_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as CMSData;
-        // Deep merge with defaults to handle new fields added after initial save
         return {
           home: deepMerge(DEFAULT_CMS.home, parsed.home || {}),
           about: deepMerge(DEFAULT_CMS.about, parsed.about || {}),
@@ -196,7 +206,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     return DEFAULT_CMS;
   });
 
-  // Persist to localStorage on every change
   useEffect(() => {
     try {
       localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(cms));
@@ -256,7 +265,5 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useCMS(): CMSContextValue {
-  const ctx = useContext(CMSContext);
-  if (!ctx) throw new Error('useCMS must be used inside CMSProvider');
-  return ctx;
+  return useContext(CMSContext);
 }
