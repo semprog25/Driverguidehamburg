@@ -26,20 +26,6 @@ function githubPagesPlugin() {
       const nojekyllPath = path.resolve(distDir, '.nojekyll')
       fs.writeFileSync(nojekyllPath, '')
       console.log('Created .nojekyll file')
-
-      // Ensure CNAME persists for custom domain after deployment
-      // Always write (overwrite) so a stale directory or file never blocks it
-      const cnamePath = path.resolve(distDir, 'CNAME')
-      try {
-        // Remove if it exists as a directory (edge case in some environments)
-        if (fs.existsSync(cnamePath) && fs.statSync(cnamePath).isDirectory()) {
-          fs.rmSync(cnamePath, { recursive: true })
-        }
-        fs.writeFileSync(cnamePath, 'driverguidehamburg.semprog.de')
-        console.log('Created/updated CNAME file for custom domain')
-      } catch (e) {
-        console.error('Failed to write CNAME:', e)
-      }
     }
   }
 }
