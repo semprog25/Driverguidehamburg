@@ -14,18 +14,26 @@ function githubPagesPlugin() {
     closeBundle() {
       const distDir = path.resolve(__dirname, 'dist')
 
-      // Copy index.html to 404.html for SPA client-side routing on GitHub Pages
+      // Copy index.html → 404.html for SPA routing on GitHub Pages
       const indexPath = path.resolve(distDir, 'index.html')
       const notFoundPath = path.resolve(distDir, '404.html')
       if (fs.existsSync(indexPath)) {
         fs.copyFileSync(indexPath, notFoundPath)
-        console.log('Created 404.html for GitHub Pages SPA support')
+        console.log('Created 404.html')
       }
 
-      // Create .nojekyll so GitHub Pages serves _-prefixed Vite asset files
-      const nojekyllPath = path.resolve(distDir, '.nojekyll')
-      fs.writeFileSync(nojekyllPath, '')
-      console.log('Created .nojekyll file')
+      // .nojekyll — lets GitHub Pages serve _-prefixed Vite asset files
+      fs.writeFileSync(path.resolve(distDir, '.nojekyll'), '')
+      console.log('Created .nojekyll')
+
+      // CNAME — custom domain (written directly to dist, bypassing the
+      // public/CNAME directory that Figma Make creates automatically)
+      const cnameDist = path.resolve(distDir, 'CNAME')
+      if (fs.existsSync(cnameDist) && fs.statSync(cnameDist).isDirectory()) {
+        fs.rmSync(cnameDist, { recursive: true })
+      }
+      fs.writeFileSync(cnameDist, 'driverguidehamburg.semprog.de')
+      console.log('Created CNAME')
     }
   }
 }
