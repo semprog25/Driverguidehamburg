@@ -8,7 +8,7 @@ import {
   Check, X, MessageSquare, Trash2, Mail, Image as ImageIcon, ExternalLink, 
   Calendar as CalendarIcon, TrendingUp, Users, Clock, ChevronLeft, ChevronRight,
   LayoutDashboard, List, Map, LogOut, CreditCard, DollarSign, AlertCircle,
-  Plus, Edit, Save, RefreshCw, Search, Camera, Download, FileText, Award
+  Plus, PenLine, Save, RefreshCw, Search, Camera, Download, FileText, Award
 } from 'lucide-react';
 import { 
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
@@ -17,6 +17,7 @@ import {
 } from 'date-fns';
 import { BlogPost } from './BlogSection';
 import { motion, AnimatePresence } from 'motion/react';
+import { CMSEditorTab } from './CMSEditorTab';
 
 export type BookingStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
 
@@ -228,15 +229,18 @@ export function AdminPanel(props: AdminDashboardProps) {
 
       <DashboardStats bookings={props.bookings} />
 
-      <Tabs defaultValue="calendar" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 mb-8 bg-slate-200/50 p-1 rounded-xl h-12">
-          <TabsTrigger value="calendar" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><LayoutDashboard className="w-4 h-4 mr-2" /> Calendar</TabsTrigger>
-          <TabsTrigger value="bookings" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><List className="w-4 h-4 mr-2" /> Bookings</TabsTrigger>
-          <TabsTrigger value="memories" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><MessageSquare className="w-4 h-4 mr-2" /> Guest Memories</TabsTrigger>
-          <TabsTrigger value="gallery" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><Camera className="w-4 h-4 mr-2" /> My Gallery</TabsTrigger>
-          <TabsTrigger value="payments" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><CreditCard className="w-4 h-4 mr-2" /> Payments</TabsTrigger>
-          <TabsTrigger value="reports" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><FileText className="w-4 h-4 mr-2" /> Reports</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="cms" className="w-full">
+        <div className="overflow-x-auto mb-8">
+          <TabsList className="grid grid-cols-7 min-w-[760px] bg-slate-200/50 p-1 rounded-xl h-12">
+            <TabsTrigger value="cms" className="rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white text-orange-600 font-bold"><PenLine className="w-4 h-4 mr-2" /> Edit Website</TabsTrigger>
+            <TabsTrigger value="calendar" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><LayoutDashboard className="w-4 h-4 mr-2" /> Calendar</TabsTrigger>
+            <TabsTrigger value="bookings" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><List className="w-4 h-4 mr-2" /> Bookings</TabsTrigger>
+            <TabsTrigger value="memories" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><MessageSquare className="w-4 h-4 mr-2" /> Guest Memories</TabsTrigger>
+            <TabsTrigger value="gallery" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><Camera className="w-4 h-4 mr-2" /> My Gallery</TabsTrigger>
+            <TabsTrigger value="payments" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><CreditCard className="w-4 h-4 mr-2" /> Payments</TabsTrigger>
+            <TabsTrigger value="reports" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white"><FileText className="w-4 h-4 mr-2" /> Reports</TabsTrigger>
+          </TabsList>
+        </div>
         
         <TabsContent value="calendar" className="space-y-6">
             <div className="flex justify-end">
@@ -281,7 +285,7 @@ export function AdminPanel(props: AdminDashboardProps) {
                           <TableCell className="align-top">{getStatusBadge(booking.status)}</TableCell>
                           <TableCell className="text-right align-top">
                             <div className="flex justify-end gap-1">
-                                <Button size="sm" variant="ghost" onClick={() => { setEditingBooking(booking); setIsBookingModalOpen(true); }}><Edit className="h-4 w-4 text-slate-500" /></Button>
+                                <Button size="sm" variant="ghost" onClick={() => { setEditingBooking(booking); setIsBookingModalOpen(true); }}><PenLine className="h-4 w-4 text-slate-500" /></Button>
                                 <Button size="sm" variant="ghost" onClick={() => { if(confirm('Delete?')) props.onDelete(booking.id); }}><Trash2 className="h-4 w-4 text-red-400" /></Button>
                             </div>
                           </TableCell>
@@ -343,7 +347,7 @@ export function AdminPanel(props: AdminDashboardProps) {
                           <TableCell>{getPostStatusBadge(post.status)}</TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1">
-                                <Button size="sm" variant="ghost" onClick={() => { setEditingPost(post); setIsPostModalOpen(true); }}><Edit className="h-4 w-4 text-slate-500" /></Button>
+                                <Button size="sm" variant="ghost" onClick={() => { setEditingPost(post); setIsPostModalOpen(true); }}><PenLine className="h-4 w-4 text-slate-500" /></Button>
                                 <Button size="sm" variant="ghost" onClick={() => { if(confirm('Delete?')) props.onDeletePost(post.id); }}><Trash2 className="h-4 w-4 text-red-400" /></Button>
                             </div>
                           </TableCell>
@@ -369,7 +373,7 @@ export function AdminPanel(props: AdminDashboardProps) {
                         <div className="aspect-[4/3] overflow-hidden relative">
                             <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                <Button size="sm" variant="secondary" onClick={() => { setEditingGalleryItem(item); setIsGalleryModalOpen(true); }}><Edit size={16} /> Edit</Button>
+                                <Button size="sm" variant="secondary" onClick={() => { setEditingGalleryItem(item); setIsGalleryModalOpen(true); }}><PenLine size={16} /> Edit</Button>
                                 <Button size="sm" variant="destructive" onClick={() => { if(confirm('Delete this photo?')) props.onDeleteGalleryItem(item.id); }}><Trash2 size={16} /> Delete</Button>
                             </div>
                         </div>
@@ -394,6 +398,10 @@ export function AdminPanel(props: AdminDashboardProps) {
 
         <TabsContent value="reports">
           <YearlyReports bookings={props.bookings} posts={props.posts} />
+        </TabsContent>
+
+        <TabsContent value="cms">
+          <CMSEditorTab />
         </TabsContent>
       </Tabs>
 
@@ -701,6 +709,11 @@ function YearlyReports({ bookings, posts }: { bookings: Booking[], posts: BlogPo
 // Helper Components
 function BookingModal({ isOpen, onClose, booking, onSave }: { isOpen: boolean, onClose: () => void, booking: Booking | null, onSave: (b: Booking) => void }) {
     const [formData, setFormData] = useState<Partial<Booking>>({});
+    const firstInputRef = React.useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isOpen) setTimeout(() => firstInputRef.current?.focus(), 50);
+    }, [isOpen]);
 
     useEffect(() => {
         if (booking) {
@@ -728,15 +741,15 @@ function BookingModal({ isOpen, onClose, booking, onSave }: { isOpen: boolean, o
 
     return (
         <AnimatePresence>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                     <div className="flex justify-between items-center mb-6 border-b pb-4">
                         <h2 className="text-xl font-bold">{booking ? 'Edit Booking' : 'New Booking'}</h2>
                         <button onClick={onClose}><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <div><label className="block text-sm font-medium mb-1">Name</label><input required className="w-full p-2 border rounded-lg" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+                            <div><label className="block text-sm font-medium mb-1">Name</label><input ref={firstInputRef} required className="w-full p-2 border rounded-lg" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
                             <div><label className="block text-sm font-medium mb-1">Email</label><input type="email" className="w-full p-2 border rounded-lg" value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} /></div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -789,6 +802,11 @@ function BookingModal({ isOpen, onClose, booking, onSave }: { isOpen: boolean, o
 
 function PostModal({ isOpen, onClose, post, onSave }: { isOpen: boolean, onClose: () => void, post: BlogPost | null, onSave: (p: BlogPost) => void }) {
     const [formData, setFormData] = useState<Partial<BlogPost>>({});
+    const firstInputRef = React.useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isOpen) setTimeout(() => firstInputRef.current?.focus(), 50);
+    }, [isOpen]);
 
     useEffect(() => {
         if (post) {
@@ -808,14 +826,14 @@ function PostModal({ isOpen, onClose, post, onSave }: { isOpen: boolean, onClose
 
     return (
         <AnimatePresence>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                      <div className="flex justify-between items-center mb-6 border-b pb-4">
                         <h2 className="text-xl font-bold">{post ? 'Edit Memory' : 'New Memory'}</h2>
                         <button onClick={onClose}><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div><label className="block text-sm font-medium mb-1">Title</label><input required className="w-full p-2 border rounded-lg" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
+                        <div><label className="block text-sm font-medium mb-1">Title</label><input ref={firstInputRef} required className="w-full p-2 border rounded-lg" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
                         <div className="grid grid-cols-2 gap-4">
                              <div><label className="block text-sm font-medium mb-1">Author</label><input required className="w-full p-2 border rounded-lg" value={formData.author || ''} onChange={e => setFormData({...formData, author: e.target.value})} /></div>
                              <div><label className="block text-sm font-medium mb-1">Location</label><input className="w-full p-2 border rounded-lg" value={formData.location || ''} onChange={e => setFormData({...formData, location: e.target.value})} /></div>
@@ -841,6 +859,11 @@ function PostModal({ isOpen, onClose, post, onSave }: { isOpen: boolean, onClose
 function GalleryModal({ isOpen, onClose, item, onSave }: { isOpen: boolean, onClose: () => void, item: GalleryItem | null, onSave: (i: GalleryItem) => void }) {
     const [formData, setFormData] = useState<Partial<GalleryItem>>({});
     const [imgError, setImgError] = useState(false);
+    const firstInputRef = React.useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isOpen) setTimeout(() => firstInputRef.current?.focus(), 50);
+    }, [isOpen]);
 
     useEffect(() => {
         if (item) {
@@ -861,14 +884,14 @@ function GalleryModal({ isOpen, onClose, item, onSave }: { isOpen: boolean, onCl
 
     return (
         <AnimatePresence>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                     <div className="flex justify-between items-center mb-6 border-b pb-4">
                         <h2 className="text-xl font-bold">{item ? 'Edit Photo' : 'New Photo'}</h2>
                         <button onClick={onClose}><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div><label className="block text-sm font-medium mb-1">Title</label><input required className="w-full p-2 border rounded-lg" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
+                        <div><label className="block text-sm font-medium mb-1">Title</label><input ref={firstInputRef} required className="w-full p-2 border rounded-lg" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} /></div>
                         
                         {/* Photo URL with live preview */}
                         <div>

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowRight, Star, Heart, Trophy, Users, Calendar } from 'lucide-react';
 import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { useCMS } from '@/app/context/CMSContext';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,6 +17,8 @@ interface HomeProps {
 
 export function Home({ onNavigate }: HomeProps) {
   const { t, language, setLanguage } = useLanguage();
+  const { cms } = useCMS();
+  const h = cms.home;
 
   const languages = [
     { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
@@ -51,17 +54,17 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Main Content Container - Centered on Desktop */}
-      <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 py-12 md:py-0">
+      <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 py-16 md:py-8">
           
           {/* Text Content (Left Side) */}
-          <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left relative z-10 flex flex-col justify-center md:-mt-16">
+          <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left relative z-10 flex flex-col justify-center">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-tight mb-6"
             >
-              <span className="block mb-2">{t('home.greeting')}</span>
+              <span className="block mb-2">{h.greeting || t('home.greeting')}</span>
               <span className="block">
                 {t('home.iam')} <span className="text-primary relative inline-block">
                 Angela
@@ -79,19 +82,19 @@ export function Home({ onNavigate }: HomeProps) {
               className="space-y-4 mb-10 max-w-lg mx-auto md:mx-0 text-slate-600 font-medium"
             >
               <p className="text-lg md:text-2xl font-bold text-slate-800 leading-snug">
-                {t('home.role')}
+                {h.role || t('home.role')}
               </p>
               <p className="text-base md:text-lg opacity-90 leading-relaxed">
-                {t('home.intro')}
+                {h.intro || t('home.intro')}
               </p>
               <p className="text-base md:text-lg opacity-90 leading-relaxed">
-                {t('home.vehicle')}
+                {h.vehicle || t('home.vehicle')}
               </p>
               <p className="text-base md:text-lg opacity-90 leading-relaxed italic">
-                 "{t('home.philosophy')}"
+                 "{h.philosophy || t('home.philosophy')}"
               </p>
               <p className="text-lg font-bold text-primary pt-2">
-                 {t('home.closing')}
+                 {h.closing || t('home.closing')}
               </p>
             </motion.div>
             
@@ -103,7 +106,7 @@ export function Home({ onNavigate }: HomeProps) {
                 onClick={() => onNavigate('tours')}
                 className="flex-1 bg-primary text-white font-bold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 group"
               >
-                {t('home.ctaDrive')}
+                {h.ctaDriveText || t('home.ctaDrive')}
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
               
@@ -113,7 +116,7 @@ export function Home({ onNavigate }: HomeProps) {
                  onClick={() => onNavigate('memories')}
                  className="flex-1 bg-white text-slate-700 font-bold text-lg py-4 px-8 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
               >
-                {t('home.ctaMemories')}
+                {h.ctaMemoriesText || t('home.ctaMemories')}
                 <Heart size={18} className="text-destructive fill-destructive/20" />
               </motion.button>
             </div>
@@ -125,40 +128,40 @@ export function Home({ onNavigate }: HomeProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="relative z-10 w-[90%] md:w-full max-w-[400px] md:max-w-none md:scale-[1.1] md:origin-center md:-mt-20"
+              className="relative z-10 w-[90%] md:w-full max-w-[400px] md:max-w-none md:origin-center"
             >
               <div className="relative w-full">
                  <ImageWithFallback 
-                   src="https://qoqbdiixztolvtcjdnle.supabase.co/storage/v1/object/public/Angela/Meet%20Angela,%20your%20friendly%20businesswoman!.png" 
+                   src={h.angelaImageUrl}
                    alt="Angela saying hi"
                    className="w-full h-auto object-contain drop-shadow-2xl"
                    loading="eager"
                    // @ts-ignore
                    fetchPriority="high"
                  />
-                 
-                 {/* Speech Bubble Overlay */}
-                 <motion.div 
-                   initial={{ opacity: 0, scale: 0 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ delay: 0.6, type: "spring" }}
-                   className="absolute bottom-4 left-0 md:left-[5%] md:bottom-[5%] z-20"
-                 >
-                    <motion.div
-                        animate={{ y: [0, -8, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        whileHover={{ 
-                            scale: 1.1, 
-                            rotate: [0, -3, 3, -3, 0],
-                            transition: { duration: 0.3 } 
-                        }}
-                        className="bg-white/95 backdrop-blur-sm p-3 md:p-5 rounded-2xl rounded-tr-xl rounded-bl-none shadow-lg border border-primary/10 max-w-[140px] md:max-w-[200px] cursor-pointer"
-                    >
-                        <p className="text-sm md:text-lg font-bold text-slate-800">"{t('home.speechBubble.title')}"</p>
-                        <p className="text-xs md:text-sm text-slate-600 mt-1 leading-tight">{t('home.speechBubble.subtitle')}</p>
-                    </motion.div>
-                 </motion.div>
               </div>
+            </motion.div>
+
+            {/* Speech Bubble — between PNG and stats bar */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, type: "spring" }}
+              className="flex justify-start w-full max-w-lg relative z-10 -mt-2 mb-2 pl-4"
+            >
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                whileHover={{
+                  scale: 1.1,
+                  rotate: [0, -3, 3, -3, 0],
+                  transition: { duration: 0.3 }
+                }}
+                className="bg-white/95 backdrop-blur-sm px-5 py-3 rounded-2xl rounded-tl-none shadow-lg border border-primary/10 cursor-pointer"
+              >
+                <p className="text-lg font-bold text-slate-800">"{h.speechBubbleTitle || t('home.speechBubble.title')}"</p>
+                <p className="text-sm text-slate-600 mt-0.5 leading-tight">{h.speechBubbleSubtitle || t('home.speechBubble.subtitle')}</p>
+              </motion.div>
             </motion.div>
             
             {/* Stats / Social Proof - Desktop Alignment (Below Mascot) */}
@@ -172,7 +175,7 @@ export function Home({ onNavigate }: HomeProps) {
                    <div className="bg-orange-100 p-2 rounded-full mb-2">
                      <Calendar size={20} className="text-orange-600" />
                    </div>
-                   <div className="text-2xl font-black text-slate-900">20+</div>
+                   <div className="text-2xl font-black text-slate-900">{h.statsYearsValue}</div>
                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('home.stats.years')}</div>
                 </div>
                 
@@ -183,7 +186,7 @@ export function Home({ onNavigate }: HomeProps) {
                    <div className="bg-blue-100 p-2 rounded-full mb-2">
                      <Users size={20} className="text-blue-600" />
                    </div>
-                   <div className="text-2xl font-black text-slate-900 whitespace-nowrap">10k+</div>
+                   <div className="text-2xl font-black text-slate-900 whitespace-nowrap">{h.statsGuestsValue}</div>
                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('home.stats.guests')}</div>
                    
                    <div className="absolute right-0 top-2 bottom-2 w-px bg-slate-200/60 -mr-3"></div>
@@ -193,7 +196,7 @@ export function Home({ onNavigate }: HomeProps) {
                    <div className="bg-yellow-100 p-2 rounded-full mb-2">
                      <Trophy size={20} className="text-yellow-600" />
                    </div>
-                   <div className="text-2xl font-black text-slate-900 flex items-center gap-1">5.0 <Star size={18} className="text-yellow-500 fill-yellow-500" /></div>
+                   <div className="text-2xl font-black text-slate-900 flex items-center gap-1">{h.statsRatingValue} <Star size={18} className="text-yellow-500 fill-yellow-500" /></div>
                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('home.stats.rating')}</div>
                 </div>
             </motion.div>
@@ -209,17 +212,17 @@ export function Home({ onNavigate }: HomeProps) {
           <div className="mt-8 w-full md:hidden">
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-50 flex justify-between items-center">
               <div className="text-center">
-                 <div className="text-2xl font-black text-slate-900">20+</div>
+                 <div className="text-2xl font-black text-slate-900">{h.statsYearsValue}</div>
                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t('home.stats.years')}</div>
               </div>
               <div className="h-8 w-px bg-slate-100"></div>
               <div className="text-center">
-                 <div className="text-2xl font-black text-slate-900">10k+</div>
+                 <div className="text-2xl font-black text-slate-900">{h.statsGuestsValue}</div>
                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t('home.stats.guests')}</div>
               </div>
               <div className="h-8 w-px bg-slate-100"></div>
               <div className="text-center">
-                 <div className="text-2xl font-black text-slate-900 flex items-center gap-1">5.0 <Star size={16} className="text-yellow-400 fill-yellow-400" /></div>
+                 <div className="text-2xl font-black text-slate-900 flex items-center gap-1">{h.statsRatingValue} <Star size={16} className="text-yellow-400 fill-yellow-400" /></div>
                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Rating</div>
               </div>
             </div>

@@ -31,7 +31,7 @@ export const translations = {
         rating: "5-Sterne Bewertung"
       },
       speechBubble: {
-        title: "Moin Moin! 👋",
+        title: "Moin! 👋",
         subtitle: "Bereit Hamburg zu erkunden?"
       }
     },
@@ -166,7 +166,7 @@ export const translations = {
         rating: "5-Star Rating"
       },
       speechBubble: {
-        title: "Moin Moin! 👋",
+        title: "Moin! 👋",
         subtitle: "Ready to explore Hamburg?"
       }
     },
@@ -298,7 +298,7 @@ export const translations = {
         rating: "Valoración 5 estrellas"
       },
       speechBubble: {
-        title: "¡Moin Moin! 👋",
+        title: "¡Moin! 👋",
         subtitle: "¿Lista para explorar?"
       }
     },

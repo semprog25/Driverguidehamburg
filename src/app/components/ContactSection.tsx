@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar as CalendarIcon, Clock, User, Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import { useCMS } from "@/app/context/CMSContext";
 
 interface ContactSectionProps {
   language: Language;
@@ -22,6 +23,8 @@ const timeSlots = [
 
 export function ContactSection({ language }: ContactSectionProps) {
   const t = translations[language];
+  const { cms } = useCMS();
+  const c = cms.contact;
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [formData, setFormData] = useState({
@@ -72,16 +75,16 @@ export function ContactSection({ language }: ContactSectionProps) {
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
              <ImageWithFallback 
-                src="https://qoqbdiixztolvtcjdnle.supabase.co/storage/v1/object/public/Angela/driverguidelogo.png" 
+                src={c.logoUrl}
                 alt="DriverGuide Logo" 
                 className="h-24 w-auto md:h-32 object-contain"
              />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            {t.contactTitle}
+            {c.title || t.contactTitle}
           </h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            {t.contactSubtitle}
+            {c.subtitle || t.contactSubtitle}
           </p>
         </div>
 

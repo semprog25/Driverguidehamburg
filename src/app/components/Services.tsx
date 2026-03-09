@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
 import { MapPin, Briefcase, Camera, Clock, CheckCircle, Ship, Moon, TreePine, Coffee } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { useCMS } from '@/app/context/CMSContext';
 
 interface ServicesProps {
   onBook: (serviceType: string) => void;
@@ -11,6 +12,7 @@ interface ServicesProps {
 
 export function Services({ onBook }: ServicesProps) {
   const { t } = useLanguage();
+  const { cms } = useCMS();
 
   const settings = {
     dots: true,
@@ -27,76 +29,74 @@ export function Services({ onBook }: ServicesProps) {
   const services = [
     {
       id: 'city',
-      title: t('services.tours.city.title'),
-      image: 'https://images.unsplash.com/photo-1690835960993-270ae9df2028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwYXJjaGl0ZWN0dXJlJTIwY2l0eXxlbnwxfHx8fDE3NjkzODM5OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      title: cms.services.find(s => s.id === 'city')?.titleOverride || t('services.tours.city.title'),
+      image: cms.services.find(s => s.id === 'city')?.mainImage || 'https://images.unsplash.com/photo-1690835960993-270ae9df2028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       images: [
-        'https://images.unsplash.com/photo-1690835960993-270ae9df2028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwYXJjaGl0ZWN0dXJlJTIwY2l0eXxlbnwxfHx8fDE3NjkzODM5OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        'https://images.unsplash.com/photo-1712945492258-9ffc8fad9e36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwY2l0eSUyMHJhdGhhdXMlMjBhcmNoaXRlY3R1cmV8ZW58MXx8fHwxNzY5Mzg5OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+        cms.services.find(s => s.id === 'city')?.mainImage || 'https://images.unsplash.com/photo-1690835960993-270ae9df2028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1712945492258-9ffc8fad9e36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
         'https://images.unsplash.com/photo-1596791657688-66236b28b788?q=80&w=1080&auto=format&fit=crop'
       ],
       icon: MapPin,
-      description: t('services.tours.city.desc'),
-      duration: '3-4 Hours'
+      description: cms.services.find(s => s.id === 'city')?.descOverride || t('services.tours.city.desc'),
+      duration: cms.services.find(s => s.id === 'city')?.durationOverride || '3-4 Hours'
     },
     {
       id: 'harbor',
-      title: t('services.tours.harbor.title'),
-      image: 'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwaGFyYm9yJTIwZWxiZSUyMHNoaXBzfGVufDF8fHx8MTc2OTM4NDAwMXww&ixlib=rb-4.1.0&q=80&w=1080',
+      title: cms.services.find(s => s.id === 'harbor')?.titleOverride || t('services.tours.harbor.title'),
+      image: cms.services.find(s => s.id === 'harbor')?.mainImage || 'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       images: [
-        'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwaGFyYm9yJTIwZWxiZSUyMHNoaXBzfGVufDF8fHx8MTc2OTM4NDAwMXww&ixlib=rb-4.1.0&q=80&w=1080',
-        'https://images.unsplash.com/photo-1684326584994-0851e4d2f696?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwaGFyYm9yJTIwZWxiZSUyMHBoaWxoYXJtb25pZSUyMHNoaXAlMjBzdW5ueXxlbnwxfHx8fDE3NjkzODk5OTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwcG9ydCUyMGNvbnRhaW5lciUyMHNoaXAlMjBlbGJlfGVufDF8fHx8MTc2OTM5MDAxMnww&ixlib=rb-4.1.0&q=80&w=1080'
+        cms.services.find(s => s.id === 'harbor')?.mainImage || 'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1684326584994-0851e4d2f696?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1650908282348-3f1178d4e031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
       ],
       icon: Ship,
-      description: t('services.tours.harbor.desc'),
-      duration: '3 Hours'
+      description: cms.services.find(s => s.id === 'harbor')?.descOverride || t('services.tours.harbor.desc'),
+      duration: cms.services.find(s => s.id === 'harbor')?.durationOverride || '3 Hours'
     },
     {
       id: 'business',
-      title: t('services.tours.business.title'),
-      image: 'https://images.unsplash.com/photo-1716370287223-0a162e265ddc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtaW5pdmFuJTIwaW50ZXJpb3IlMjBsZWF0aGVyJTIwc2VhdHN8ZW58MXx8fHwxNzY5Mzg0MDA1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      images: [
-          'https://images.unsplash.com/photo-1716370287223-0a162e265ddc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtaW5pdmFuJTIwaW50ZXJpb3IlMjBsZWF0aGVyJTIwc2VhdHN8ZW58MXx8fHwxNzY5Mzg0MDA1fDA&ixlib=rb-4.1.0&q=80&w=1080'
-      ],
+      title: cms.services.find(s => s.id === 'business')?.titleOverride || t('services.tours.business.title'),
+      image: cms.services.find(s => s.id === 'business')?.mainImage || 'https://images.unsplash.com/photo-1716370287223-0a162e265ddc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+      images: ['https://images.unsplash.com/photo-1716370287223-0a162e265ddc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'],
       icon: Briefcase,
-      description: t('services.tours.business.desc'),
-      duration: 'Flexible'
+      description: cms.services.find(s => s.id === 'business')?.descOverride || t('services.tours.business.desc'),
+      duration: cms.services.find(s => s.id === 'business')?.durationOverride || 'Flexible'
     },
     {
       id: 'lights',
-      title: t('services.tours.lights.title'),
-      image: 'https://images.unsplash.com/photo-1705311116604-cd70315044cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwbmlnaHQlMjByZWVwZXJiYWhuJTIwc3BlaWNoZXJzdGFkdCUyMGlsbHVtaW5hdGlvbnxlbnwxfHx8fDE3NjkzODk5ODB8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      title: cms.services.find(s => s.id === 'lights')?.titleOverride || t('services.tours.lights.title'),
+      image: cms.services.find(s => s.id === 'lights')?.mainImage || 'https://images.unsplash.com/photo-1705311116604-cd70315044cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       images: [
-          'https://images.unsplash.com/photo-1705311116604-cd70315044cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwbmlnaHQlMjByZWVwZXJiYWhuJTIwc3BlaWNoZXJzdGFkdCUyMGlsbHVtaW5hdGlvbnxlbnwxfHx8fDE3NjkzODk5ODB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-          'https://images.unsplash.com/photo-1624819250038-34acee64c0a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwc3BlaWNoZXJzdGFkdCUyMG5pZ2h0JTIwd2F0ZXIlMjByZWZsZWN0aW9ufGVufDF8fHx8MTc2OTM5MDAwMnww&ixlib=rb-4.1.0&q=80&w=1080'
+        cms.services.find(s => s.id === 'lights')?.mainImage || 'https://images.unsplash.com/photo-1705311116604-cd70315044cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1624819250038-34acee64c0a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
       ],
       icon: Moon,
-      description: t('services.tours.lights.desc'),
-      duration: '2-3 Hours'
+      description: cms.services.find(s => s.id === 'lights')?.descOverride || t('services.tours.lights.desc'),
+      duration: cms.services.find(s => s.id === 'lights')?.durationOverride || '2-3 Hours'
     },
     {
       id: 'countryside',
-      title: t('services.tours.countryside.title'),
-      image: 'https://images.unsplash.com/photo-1763465447001-583e01ff00a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQWx0ZXMlMjBMYW5kJTIwY291bnRyeXNpZGUlMjBvcmNoYXJkJTIwZmFybWhvdXNlfGVufDF8fHx8MTc2OTM4OTk4NXww&ixlib=rb-4.1.0&q=80&w=1080',
+      title: cms.services.find(s => s.id === 'countryside')?.titleOverride || t('services.tours.countryside.title'),
+      image: cms.services.find(s => s.id === 'countryside')?.mainImage || 'https://images.unsplash.com/photo-1763465447001-583e01ff00a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       images: [
-        'https://images.unsplash.com/photo-1763465447001-583e01ff00a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQWx0ZXMlMjBMYW5kJTIwY291bnRyeXNpZGUlMjBvcmNoYXJkJTIwZmFybWhvdXNlfGVufDF8fHx8MTc2OTM4OTk4NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        'https://images.unsplash.com/photo-1746955229884-49377ca40e7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQWx0ZXMlMjBMYW5kJTIwY2hlcnJ5JTIwYmxvc3NvbXxlbnwxfHx8fDE3NjkzOTAwMDV8MA&ixlib=rb-4.1.0&q=80&w=1080'
+        cms.services.find(s => s.id === 'countryside')?.mainImage || 'https://images.unsplash.com/photo-1763465447001-583e01ff00a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1746955229884-49377ca40e7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
       ],
       icon: TreePine,
-      description: t('services.tours.countryside.desc'),
-      duration: '5 Hours'
+      description: cms.services.find(s => s.id === 'countryside')?.descOverride || t('services.tours.countryside.desc'),
+      duration: cms.services.find(s => s.id === 'countryside')?.durationOverride || '5 Hours'
     },
     {
       id: 'christmas',
-      title: t('services.tours.christmas.title'),
-      image: 'https://images.unsplash.com/photo-1612194929184-54f8a99e237a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQ2hyaXN0bWFzJTIwbWFya2V0JTIwcmF0aGF1cyUyMGZlc3RpdmUlMjBsaWdodHN8ZW58MXx8fHwxNzY5Mzg5OTg4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      title: cms.services.find(s => s.id === 'christmas')?.titleOverride || t('services.tours.christmas.title'),
+      image: cms.services.find(s => s.id === 'christmas')?.mainImage || 'https://images.unsplash.com/photo-1612194929184-54f8a99e237a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       images: [
-          'https://images.unsplash.com/photo-1612194929184-54f8a99e237a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQ2hyaXN0bWFzJTIwbWFya2V0JTIwcmF0aGF1cyUyMGZlc3RpdmUlMjBsaWdodHN8ZW58MXx8fHwxNzY5Mzg5OTg4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-          'https://images.unsplash.com/photo-1737069221901-2ae7442f62a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIYW1idXJnJTIwQ2hyaXN0bWFzJTIwbWFya2V0JTIwZm9vZCUyMGdsdWh3ZWlufGVufDF8fHx8MTc2OTM5MDAwOHww&ixlib=rb-4.1.0&q=80&w=1080'
+        cms.services.find(s => s.id === 'christmas')?.mainImage || 'https://images.unsplash.com/photo-1612194929184-54f8a99e237a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        'https://images.unsplash.com/photo-1737069221901-2ae7442f62a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
       ],
       icon: Coffee,
-      description: t('services.tours.christmas.desc'),
-      duration: '3 Hours'
+      description: cms.services.find(s => s.id === 'christmas')?.descOverride || t('services.tours.christmas.desc'),
+      duration: cms.services.find(s => s.id === 'christmas')?.durationOverride || '3 Hours'
     }
   ];
 
@@ -105,7 +105,7 @@ export function Services({ onBook }: ServicesProps) {
        {/* Header Image */}
        <div className="relative h-[22rem] md:h-[450px] w-full bg-teal-50 rounded-b-[3rem] md:rounded-b-[5rem] overflow-hidden shadow-sm">
           <ImageWithFallback
-            src="https://qoqbdiixztolvtcjdnle.supabase.co/storage/v1/object/public/Angela/Cheerful%20woman%20with%20Hyundai%20minivan%20mascot.png"
+            src={cms.home.headerBgImageUrl}
             alt="Angela with her car"
             className="absolute bottom-12 -right-6 h-[65%] w-[70%] md:w-[45%] md:h-[85%] md:bottom-12 md:right-0 object-contain object-right-bottom md:mr-8 z-0"
           />

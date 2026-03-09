@@ -2,12 +2,13 @@ import { Language } from "../App";
 import { translations } from "../translations";
 import { Card, CardContent } from "./ui/card";
 import { Award, Shield, Lightbulb, Clock } from "lucide-react";
+import { useCMS } from "@/app/context/CMSContext";
 
 // Images — using Unsplash URLs (replaced Figma asset imports for git compatibility)
-const angelaImage = "https://images.unsplash.com/photo-1738776755796-8f02061f76c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
-const harborImage = "https://images.unsplash.com/photo-1764725237655-2553f9cceccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
-const castleImage = "https://images.unsplash.com/photo-1766231593852-fce6cdcb8cda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
-const luebeckImage = "https://images.unsplash.com/photo-1581183948201-ddbae95a56a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const angelaImageDefault = "https://images.unsplash.com/photo-1738776755796-8f02061f76c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const harborImageDefault = "https://images.unsplash.com/photo-1764725237655-2553f9cceccd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const castleImageDefault = "https://images.unsplash.com/photo-1766231593852-fce6cdcb8cda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+const luebeckImageDefault = "https://images.unsplash.com/photo-1581183948201-ddbae95a56a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
 
 interface AboutDriverProps {
   language: Language;
@@ -15,47 +16,22 @@ interface AboutDriverProps {
 
 export function AboutDriver({ language }: AboutDriverProps) {
   const t = translations[language];
+  const { cms } = useCMS();
+  const a = cms.about;
+
+  const angelaImage = a.profileImageUrl || angelaImageDefault;
 
   const features = [
-    {
-      icon: Award,
-      title: t.experience,
-      description: t.years,
-      color: "bg-blue-500",
-    },
-    {
-      icon: Shield,
-      title: t.licensed,
-      description: t.professional,
-      color: "bg-green-500",
-    },
-    {
-      icon: Lightbulb,
-      title: t.localKnowledge,
-      description: t.insider,
-      color: "bg-amber-500",
-    },
-    {
-      icon: Clock,
-      title: language === "de" ? "Flexibel" : "Flexible",
-      description: language === "de" ? "24/7 verfügbar" : "24/7 available",
-      color: "bg-purple-500",
-    },
+    { icon: Award, title: t.experience, description: t.years, color: "bg-blue-500" },
+    { icon: Shield, title: t.licensed, description: t.professional, color: "bg-green-500" },
+    { icon: Lightbulb, title: t.localKnowledge, description: t.insider, color: "bg-amber-500" },
+    { icon: Clock, title: language === "de" ? "Flexibel" : "Flexible", description: language === "de" ? "24/7 verfügbar" : "24/7 available", color: "bg-purple-500" },
   ];
 
   const galleryImages = [
-    {
-      src: harborImage,
-      alt: language === "de" ? "Hamburg Hafen" : "Hamburg Harbor",
-    },
-    {
-      src: castleImage,
-      alt: language === "de" ? "Historisches Schloss" : "Historic Castle",
-    },
-    {
-      src: luebeckImage,
-      alt: language === "de" ? "Lübeck Altstadt" : "Lübeck Old Town",
-    },
+    { src: a.galleryImage1 || harborImageDefault, alt: language === "de" ? "Hamburg Hafen" : "Hamburg Harbor" },
+    { src: a.galleryImage2 || castleImageDefault, alt: language === "de" ? "Historisches Schloss" : "Historic Castle" },
+    { src: a.galleryImage3 || luebeckImageDefault, alt: language === "de" ? "Lübeck Altstadt" : "Lübeck Old Town" },
   ];
 
   return (
@@ -69,17 +45,11 @@ export function AboutDriver({ language }: AboutDriverProps) {
           {/* Image Section */}
           <div className="relative order-2 lg:order-1 animate-pop-in">
             <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-black transform hover:scale-105 transition-transform duration-500 hover:rotate-2">
-              <img
-                src={angelaImage}
-                alt="Angela Scheefeld - Your Hamburg Driver Guide"
-                className="w-full h-[400px] md:h-[500px] object-cover"
-              />
+              <img src={angelaImage} alt="Angela Scheefeld - Your Hamburg Driver Guide" className="w-full h-[400px] md:h-[500px] object-cover" />
             </div>
-            {/* Decorative Badge */}
             <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-2xl shadow-xl border-4 border-white animate-bounce-subtle">
-              <p className="text-sm font-semibold">✨ {language === "de" ? "Ihre persönliche Guide" : "Your personal guide"} ✨</p>
+              <p className="text-sm font-semibold">{a.badgeText || (language === "de" ? "✨ Ihre persönliche Guide ✨" : "✨ Your personal guide ✨")}</p>
             </div>
-            {/* Floating emoji decorations */}
             <div className="absolute -top-4 -left-4 text-4xl animate-float">🚐</div>
             <div className="absolute top-10 -right-6 text-3xl animate-float" style={{ animationDelay: '1s' }}>⭐</div>
           </div>
@@ -87,15 +57,14 @@ export function AboutDriver({ language }: AboutDriverProps) {
           {/* Content Section */}
           <div className="order-1 lg:order-2">
             <h2 className="text-3xl md:text-5xl font-bold text-black mb-3 md:mb-4 animate-slide-in-bottom">
-              {t.driverTitle} 👋
+              {a.title || t.driverTitle} 👋
             </h2>
             <h3 className="text-lg md:text-xl text-gray-700 mb-4 md:mb-6 font-semibold animate-slide-in-bottom" style={{ animationDelay: '0.1s' }}>
-              {t.driverSubtitle}
+              {a.subtitle || t.driverSubtitle}
             </h3>
             <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed animate-slide-in-bottom" style={{ animationDelay: '0.2s' }}>
-              {t.driverText}
+              {a.bio || t.driverText}
             </p>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {features.map((feature, index) => (
                 <Card key={index} className="border-3 hover:border-black transition-all duration-300 hover:shadow-xl bg-white hover:-translate-y-1 animate-pop-in" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -104,12 +73,8 @@ export function AboutDriver({ language }: AboutDriverProps) {
                     <div className={`${feature.color} w-12 h-12 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 relative z-10`}>
                       <feature.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="font-semibold text-black mb-1 relative z-10">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm relative z-10">
-                      {feature.description}
-                    </p>
+                    <h3 className="font-semibold text-black mb-1 relative z-10">{feature.title}</h3>
+                    <p className="text-gray-600 text-sm relative z-10">{feature.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -120,18 +85,14 @@ export function AboutDriver({ language }: AboutDriverProps) {
         {/* Gallery Section */}
         <div className="text-center mb-8">
           <h3 className="text-2xl md:text-4xl font-bold text-black animate-pop-in">
-            <span className="inline-block animate-wiggle">🏰</span> Discover Hamburg's Beauty! <span className="inline-block animate-wiggle" style={{ animationDelay: '0.3s' }}>🌊</span>
+            {a.galleryTitle || "🏰 Discover Hamburg's Beauty! 🌊"}
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {galleryImages.map((image, index) => (
             <div key={index} className="overflow-hidden rounded-2xl shadow-xl border-4 border-black group animate-pop-in hover:scale-105 transition-transform duration-500" style={{ animationDelay: `${index * 0.15}s` }}>
               <div className="relative">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-700"
-                />
+                <img src={image.src} alt={image.alt} className="w-full h-64 md:h-72 object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
                   <p className="text-white font-bold text-lg">{image.alt}</p>
                 </div>

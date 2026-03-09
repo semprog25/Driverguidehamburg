@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Toaster, toast } from 'sonner';
 import { LanguageProvider } from '@/app/context/LanguageContext';
+import { CMSProvider } from '@/app/context/CMSContext';
 import { Button } from '@/app/components/ui/button';
 import { Home as HomeIcon } from 'lucide-react';
 
@@ -525,9 +526,11 @@ function MainLayout() {
 
 const App = () => {
   return (
-    <LanguageProvider>
-      <MainLayout />
-    </LanguageProvider>
+    <CMSProvider>
+      <LanguageProvider>
+        <MainLayout />
+      </LanguageProvider>
+    </CMSProvider>
   );
 };
 
